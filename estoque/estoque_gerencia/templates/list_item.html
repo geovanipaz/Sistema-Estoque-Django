@@ -91,6 +91,13 @@
 
 
 <main role='main' class="container">
+  {% if messages %}
+    <ul class="messages">
+         {% for message in messages %}
+               <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+         {% endfor %}
+    </ul>
+  {% endif %}
   <div class="header">{{title}}</div>
     <form method='POST' action=''>
           {% csrf_token %}
@@ -106,6 +113,8 @@
           <th>CATEGORIA</th>
           <th>NOME</th>
           <th>QUANTIDADE</th>
+          <th>CRIADO</th>
+          <th>ULTIMA ATUALIZAÇÃO</th>
           <th>DELETAR</th>
         </tr>
       </thead>
@@ -116,6 +125,8 @@
           <td><a href="{% url 'estoque:update_item' estoque.id %}">{{estoque.item_nome}}</a></td>
           <!--<td>{{estoque.item_nome}}</td>-->
           <td>{{estoque.quantidade}}</td>
+          <td>{{estoque.ultima_atualizacao}}</td>
+          <td>{{estoque.criado}}</td>
           <td><a href="{% url 'estoque:delete_item' estoque.id %}">
             <img src="{% static 'img/delete.jpg' %}" alt=""width="20" height="20"></a></td>
         </tr>

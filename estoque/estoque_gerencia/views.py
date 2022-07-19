@@ -6,6 +6,7 @@ import csv
 
 from .models import Estoque
 from .forms import EstoqueCreateForm, EstoqueSearchForm, EstoqueUpdateForm
+from django.contrib import messages
 # Create your views here.
 
 def home(request):
@@ -50,6 +51,7 @@ def add_item(request):
     form = EstoqueCreateForm(request.POST or None)
     if form.is_valid():
         form.save()
+        messages.success(request, 'Salvo com Sucesso')
         return redirect('/list_item')
     context = {
         'title':'Add Estoque',
@@ -74,5 +76,6 @@ def delete_item(request, pk):
     estoque = Estoque.objects.get(id=pk)
     if request.method == 'POST':
         estoque.delete()
+        messages.success(request, 'Deletado com Sucesso')
         return redirect('/list_item')
     return render(request, 'delete_item.html')

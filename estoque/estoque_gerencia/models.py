@@ -29,6 +29,7 @@ class Estoque(models.Model):
     criada_por = models.CharField(max_length=50, blank=True, null=True)
     nivel_reabastecimento = models.IntegerField(default='0', blank=True, null=True)
     ultima_atualizacao = models.DateTimeField(auto_now_add=False, auto_now=True)
+    criado = models.DateTimeField(auto_now_add=False, auto_now=True)
     
     
     
