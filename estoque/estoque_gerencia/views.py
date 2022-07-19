@@ -79,3 +79,11 @@ def delete_item(request, pk):
         messages.success(request, 'Deletado com Sucesso')
         return redirect('/list_item')
     return render(request, 'delete_item.html')
+
+def estoque_detail(request, pk):
+    estoque = Estoque.objects.get(id=pk)
+    context = {
+        'title':estoque.item_nome,
+        'estoque':estoque,
+    }
+    return render(request,'estoque_detail.html', context)

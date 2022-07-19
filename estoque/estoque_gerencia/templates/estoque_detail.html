@@ -99,41 +99,26 @@
     </ul>
   {% endif %}
   <div class="header">{{title}}</div>
-    <form method='POST' action=''>
-          {% csrf_token %}
-          {{form|crispy}}
-          <input type="submit" value='Search'/>
-    </form>
-    <br>
-  <div class="display_table">
-    <table class="table">
-      <thead>
-        <tr>
-          <th>NUMERO</th>
-          <th>CATEGORIA</th>
-          <th>NOME</th>
-          <th>QUANTIDADE</th>
-          <th>CRIADO</th>
-          <th>ULTIMA ATUALIZAÇÃO</th>
-          <th>DELETAR</th>
-        </tr>
-      </thead>
-      {% for estoque in estoques %}
-        <tr>
-          <td>{{forloop.counter}}</td>
-          <td>{{estoque.categoria}}</td>
-          <td><a href="{% url 'estoque:update_item' estoque.id %}">{{estoque.item_nome}}</a></td>
-          <!--<td>{{estoque.item_nome}}</td>-->
-          <!--<td>{{estoque.quantidade}}</td>-->
-          <td><a href="{% url 'estoque:estoque_detail' estoque.id %}">{{estoque.quantidade}}</a></td>
-          <td>{{estoque.ultima_atualizacao}}</td>
-          <td>{{estoque.criado}}</td>
-          <td><a href="{% url 'estoque:delete_item' estoque.id %}">
-            <img src="{% static 'img/delete.jpg' %}" alt=""width="20" height="20"></a></td>
-        </tr>
-      {% endfor %}
-    </table>
-  </div>
+  <a href='#issue'><div class='btn btn-danger'>EMITIR ESTE ITEM</div></a>
+  <a href='#receive'><div class='btn btn-primary'>RECEBER ESTE ITEM</div></a>
+        <br><br>
+        <div class="display_table">
+          <table class='table'>
+                  <tr>
+                    <th>ITEM NAME</th>
+                    <th>QUANTITY IN STORE</th>
+                    <th>LAST UPDATED</th>
+                    <th>REORDER LEVEL</th>
+                  </tr>
+                  <tr>
+                    <td>{{estoque.item_nome}}</td>
+                    <td>{{estoque.quantidade}}</td>
+                    <td>{{estoque.ultima_atualizacao}}</td>
+                    <td>{{estoque.nivel_reabastecimento}}</td>
+                  </tr>
+          </table>
+        </div>
+  
  
 </main>
 
@@ -144,3 +129,4 @@
       
   </body>
 </html>
+
