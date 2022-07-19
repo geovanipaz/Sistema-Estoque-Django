@@ -1,8 +1,23 @@
+
 from django.db import models
 
 # Create your models here.
+
+categoria_escolha = (
+    ('Roupas', 'Roupas'),
+    ('Eletrônicos', 'Eletrônicos'),
+    ('Calçados','Calçados'),
+    ('Informática', 'Informática')
+)
+
+class Categoria(models.Model):
+    nome = models.CharField(max_length=50, blank=True, null=True)
+	
+    def __str__(self):
+        return self.nome
+
 class Estoque(models.Model):
-    categoria = models.CharField(max_length=50, blank=True, null=True)
+    categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE, blank=True)
     item_nome = models.CharField(max_length=50, blank=True, null=True)
     quantidade = models.IntegerField(default='0', blank=True, null=True)
     quantidade_recebida = models.IntegerField(default='0', blank=True, null=True)
@@ -14,7 +29,7 @@ class Estoque(models.Model):
     criada_por = models.CharField(max_length=50, blank=True, null=True)
     nivel_reabastecimento = models.IntegerField(default='0', blank=True, null=True)
     ultima_atualizacao = models.DateTimeField(auto_now_add=False, auto_now=True)
-    exportar_para_CSV = models.BooleanField(default=False)
+    
     
     
     def __str__(self) -> str:

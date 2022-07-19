@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Estoque
+from .models import Estoque, Categoria
 from .forms import EstoqueCreateForm
 # Register your models here.
 
@@ -10,3 +10,4 @@ class EstoqueCreateAdmin(admin.ModelAdmin):
     search_fields = ['categoria','item_nome']
 
 admin.site.register(Estoque, EstoqueCreateAdmin)
+admin.site.register(Categoria)

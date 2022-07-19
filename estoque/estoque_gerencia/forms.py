@@ -16,7 +16,7 @@ class EstoqueCreateForm(forms.ModelForm):
         
         for estoque in Estoque.objects.all():
             if estoque.categoria == categoria:
-                raise forms.ValidationError(categoria+' já foi criada')
+                raise forms.ValidationError(str(categoria)+' já foi criada')
         return categoria
     
     def clean_item_nome(self):
@@ -27,6 +27,7 @@ class EstoqueCreateForm(forms.ModelForm):
 		
         
 class EstoqueSearchForm(forms.ModelForm):
+    exportar_para_CSV = forms.BooleanField()
     class Meta:
         model = Estoque
         fields = ['categoria', 'item_nome']        

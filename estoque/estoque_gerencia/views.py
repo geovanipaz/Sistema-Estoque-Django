@@ -1,7 +1,8 @@
 from multiprocessing import context
 
 from django.shortcuts import render, redirect
-
+from django.http import HttpResponse
+import csv
 
 from .models import Estoque
 from .forms import EstoqueCreateForm, EstoqueSearchForm, EstoqueUpdateForm
@@ -24,9 +25,20 @@ def list_item(request):
     }
     if request.method == 'POST':
         estoques = Estoque.objects.filter(
-            categoria__icontains=form['categoria'].value(),
+            #categoria__icontains=form['categoria'].value(),
             item_nome__icontains=form['item_nome'].value()
         )
+        
+        if form['exportar_para_CSV'].value() == True:
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename="List of stock.csv"'
+            writer = csv.writer(response)
+            writer.writerow(['CATEGORIA', 'ITEM NOME', 'QUANTIDADE'])
+            instance = estoques
+            for stock in instance:
+                writer.writerow([stock.categoria, stock.item_nome, stock.quantidade])
+			
+            return response
         context = {
             'form':form,
             'title':title,
