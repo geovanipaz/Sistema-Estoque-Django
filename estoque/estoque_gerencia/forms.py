@@ -36,3 +36,18 @@ class EstoqueUpdateForm(forms.ModelForm):
     class Meta:
         model = Estoque
         fields = ['categoria','item_nome', 'quantidade']
+        
+class EmitirForm(forms.ModelForm):
+    class Meta:
+        model = Estoque
+        fields = ['quantidade_emitida', 'emitida_para']
+
+class ReceberForm(forms.ModelForm):
+    class Meta:
+        model = Estoque
+        fields = ['quantidade_recebida', 'emitida_por']
+        
+class NivelReabastecimentoForm(forms.ModelForm):
+    class Meta:
+        model = Estoque
+        fields = ['nivel_reabastecimento']

@@ -112,7 +112,8 @@
           <th>NUMERO</th>
           <th>CATEGORIA</th>
           <th>NOME</th>
-          <th>QUANTIDADE</th>
+          <th>QUANTIDADE EM ESTOQUE</th>
+          <th>NIVEL MAXIMO DE REABASTECIMENTO</th>
           <th>CRIADO</th>
           <th>ULTIMA ATUALIZAÇÃO</th>
           <th>DELETAR</th>
@@ -125,7 +126,18 @@
           <td><a href="{% url 'estoque:update_item' estoque.id %}">{{estoque.item_nome}}</a></td>
           <!--<td>{{estoque.item_nome}}</td>-->
           <!--<td>{{estoque.quantidade}}</td>-->
-          <td><a href="{% url 'estoque:estoque_detail' estoque.id %}">{{estoque.quantidade}}</a></td>
+          <!--<td><a href="{% url 'estoque:estoque_detail' estoque.id %}">
+            {{estoque.quantidade}}</a></td>-->
+          
+          <td>
+            {% if estoque.quantidade <= estoque.nivel_reabastecimento %}
+              <div style="background-color: orange;">{{estoque.quantidade}}</div>
+            {% else %}
+              {{estoque.quantidade}}
+            {% endif %}
+          </td>
+          <td><a href="{% url 'estoque:nivel_reabastecimento' estoque.id %}">
+            {{estoque.nivel_reabastecimento}}</a></td>
           <td>{{estoque.ultima_atualizacao}}</td>
           <td>{{estoque.criado}}</td>
           <td><a href="{% url 'estoque:delete_item' estoque.id %}">
