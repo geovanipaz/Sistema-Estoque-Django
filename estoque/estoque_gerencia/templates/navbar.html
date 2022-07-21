@@ -16,10 +16,15 @@
             <a class="nav-link" href="/add_item">Adiciona Itens</a>
           </li>
         </ul>
-        <form class="d-flex" role="search">
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
+        <ul class="navbar-nav">
+          {% if request.user.is_authenticated %}
+          <li><a href="/accounts/logout"><div 
+            class="btn btn-danger">{{ user }} | Logout</div></a></li>
+          {% else %}
+          <li><a href="/accounts/login">Login</a></li>
+          {% endif %}
+        </ul>
+        
       </div>
     </div>
   </nav>
