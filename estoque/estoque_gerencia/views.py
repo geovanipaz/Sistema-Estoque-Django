@@ -4,17 +4,20 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 import csv
 
-from .models import Estoque
+from django.contrib.auth.decorators import login_required
+from .models import Estoque, HistoricoEstoque
 from .forms import EstoqueCreateForm, EstoqueSearchForm, EstoqueUpdateForm
 from .forms import EmitirForm, ReceberForm, NivelReabastecimentoForm
 from django.contrib import messages
 # Create your views here.
 
+@login_required
 def home(request):
     title = "bem vindo"
     context = {'title':title}
     return render(request, 'home.html', context)
 
+@login_required
 def list_item(request):
     title = 'Lista de Item'
     
@@ -48,6 +51,7 @@ def list_item(request):
         }
     return render(request, 'list_item.html', context)
 
+@login_required
 def add_item(request):
     form = EstoqueCreateForm(request.POST or None)
     if form.is_valid():
@@ -60,6 +64,8 @@ def add_item(request):
     }
     return render(request, 'add_item.html', context)
 
+
+@login_required
 def update_item(request, pk):
     estoque = Estoque.objects.get(id=pk)
     form = EstoqueUpdateForm(instance=estoque)
@@ -72,7 +78,9 @@ def update_item(request, pk):
         'form':form
     }
     return render(request, 'add_item.html', context)
-    
+
+
+@login_required    
 def delete_item(request, pk):
     estoque = Estoque.objects.get(id=pk)
     if request.method == 'POST':
@@ -81,6 +89,9 @@ def delete_item(request, pk):
         return redirect('/list_item')
     return render(request, 'delete_item.html')
 
+
+
+@login_required
 def estoque_detail(request, pk):
     estoque = Estoque.objects.get(id=pk)
     context = {
@@ -89,11 +100,14 @@ def estoque_detail(request, pk):
     }
     return render(request,'estoque_detail.html', context)
 
+
+@login_required
 def emitir_item(request, pk):
     estoque = Estoque.objects.get(id=pk)
     form = EmitirForm(request.POST or None, instance=estoque)
     if form.is_valid():
         instance = form.save(commit=False)
+        instance.quantidade_recebida = 0
         instance.quantidade -= instance.quantidade_emitida
         instance.emitida_por = str(request.user)
         messages.success(request, "Emitido Com Sucesso. "
@@ -112,13 +126,15 @@ def emitir_item(request, pk):
 		"username": 'Emitir por: ' + str(request.user),
 	}
     return render(request,'add_item.html', context)
-
+@login_required
 def receber_item(request, pk):
     estoque = Estoque.objects.get(id=pk)
     form = ReceberForm(request.POST or None, instance=estoque)
     if form.is_valid():
         instance = form.save(commit=False)
+        instance.quantidade_emitida = 0
         instance.quantidade += instance.quantidade_recebida
+        instance.recebida_por = str(request.user)
         instance.save()
         messages.success(request, "Recebida Com Sucesso. "
                          + str(instance.quantidade) + " " +
@@ -136,7 +152,9 @@ def receber_item(request, pk):
 		"username": 'Receber por: ' + str(request.user),
 	}
     return render(request,'add_item.html', context)   
-	
+
+
+@login_required	
 def nivel_reabastecimento(request, pk):
     estoque = Estoque.objects.get(id=pk)
     form = NivelReabastecimentoForm(request.POST or None, instance=estoque)
@@ -152,3 +170,61 @@ def nivel_reabastecimento(request, pk):
         'form':form
     }
     return render(request,'add_item.html', context)
+
+
+
+
+
+
+@login_required
+def list_history(request):
+    cabeca = 'LISTA DE ITENS'
+    historico = HistoricoEstoque.objects.all()
+    form  = EstoqueSearchForm(request.POST or None)
+    context = {
+        'form':form,
+        'cabeca':cabeca,
+        'historico':historico
+    }
+    
+    if request.method == 'POST':
+        categoria = form['categoria'].value()
+        historico = HistoricoEstoque.objects.filter(
+            item_nome__icontains=form['item_nome'].value()
+        )
+        
+        if (categoria != ''):
+            historico = historico.filter(categoria_id=categoria)
+            
+        if form['exportar_para_CSV'].value() == True:
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename="List of stock.csv"'
+            writer = csv.writer(response)
+            writer.writerow(
+				['CATEGORY', 
+				'ITEM NAME',
+				'QUANTITY', 
+				'ISSUE QUANTITY', 
+				'RECEIVE QUANTITY', 
+				'RECEIVE BY', 
+				'ISSUE BY', 
+				'LAST UPDATED'])
+            instance = historico
+            
+            for stock in instance:
+                writer.writerow(
+                [stock.categoria, 
+                stock.item_nome, 
+                stock.quantidade, 
+                stock.quantidade_emitida, 
+                stock.quantidade_recebida, 
+                stock.recebida_por, 
+                stock.emitida_por, 
+                stock.ultima_atualizacao])
+            return response
+        context = {
+            'form':form,
+            'cabeca':cabeca,
+            'historico': historico
+        }
+    return render(request, "list_history.html",context)

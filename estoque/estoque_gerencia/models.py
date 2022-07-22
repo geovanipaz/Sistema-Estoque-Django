@@ -31,6 +31,22 @@ class Estoque(models.Model):
     ultima_atualizacao = models.DateTimeField(auto_now_add=False, auto_now=True)
     criado = models.DateTimeField(auto_now_add=False, auto_now=True)
     
+
+class HistoricoEstoque(models.Model):
+    categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE, blank=True)
+    item_nome = models.CharField(max_length=50, blank=True, null=True)
+    quantidade = models.IntegerField(default='0', blank=True, null=True)
+    quantidade_recebida = models.IntegerField(default='0', blank=True, null=True)
+    recebida_por = models.CharField(max_length=50, blank=True, null=True)
+    quantidade_emitida = models.IntegerField(default='0', blank=True, null=True)
+    emitida_por = models.CharField(max_length=50, blank=True, null=True)
+    emitida_para = models.CharField(max_length=50, blank=True, null=True)
+    telefone = models.CharField(max_length=50, blank=True, null=True)
+    criada_por = models.CharField(max_length=50, blank=True, null=True)
+    nivel_reabastecimento = models.IntegerField(default='0', blank=True, null=True)
+    ultima_atualizacao = models.DateTimeField(auto_now_add=False, auto_now=False, null=True)
+    criado = models.DateTimeField(auto_now_add=False, auto_now=False, null=True)
+    
     
     
     def __str__(self) -> str:

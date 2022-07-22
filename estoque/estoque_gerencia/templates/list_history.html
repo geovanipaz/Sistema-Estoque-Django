@@ -98,59 +98,47 @@
          {% endfor %}
     </ul>
   {% endif %}
-  <div class="header">{{title}}</div>
-    <form method='POST' action=''>
-          {% csrf_token %}
-          {{form|crispy}}
-          <input type="submit" value='Search'/>
-    </form>
-    <br>
+  <div class="header">{{cabeca}}</div>
+  <form method='POST' action=''>
+    {% csrf_token %}
+    {{form|crispy}}
+    <input type="submit" value='Search'/>
+  </form>
+
   <div class="display_table">
-    <table class="table">
+    <table class='table'>
       <thead>
         <tr>
-          <th>NUMERO</th>
+          <th>COUNT</th>
+          <th>ID</th>
           <th>CATEGORIA</th>
-          <th>NOME</th>
-          <th>QUANTIDADE EM ESTOQUE</th>
-          <th>NIVEL MAXIMO DE REABASTECIMENTO</th>
-          <th>CRIADO</th>
+          <th>ITEM NOME</th>
+          <th>QUANTIDADE NO ESTOQUE</th>
+          <th>QUANTIDADE EMITIDA</th>
+          <th>QUANTIDADE RECEBIDA</th>
+          <th>RECEBIDA POR</th>
+          <th>EMITIDA POR</th>
           <th>ULTIMA ATUALIZAÇÃO</th>
-          <th>DELETAR</th>
         </tr>
       </thead>
-      {% for estoque in estoques %}
+    {% for instance in historico %}
         <tr>
+
           <td>{{forloop.counter}}</td>
-          <td>{{estoque.categoria}}</td>
-          <td><a href="{% url 'estoque:update_item' estoque.id %}">{{estoque.item_nome}}</a></td>
-          <!--<td>{{estoque.item_nome}}</td>-->
-          <!--<td>{{estoque.quantidade}}</td>-->
-          <!--<td><a href="{% url 'estoque:estoque_detail' estoque.id %}">
-            {{estoque.quantidade}}</a></td>-->
-          
-          <td>
-            {% if estoque.quantidade <= estoque.nivel_reabastecimento %}
-              <div style="background-color: orange;">
-                <a href="{% url 'estoque:estoque_detail' estoque.id %}">
-                  {{estoque.quantidade}}</a>
-              </div>
-            {% else %}
-            <a href="{% url 'estoque:estoque_detail' estoque.id %}">
-              {{estoque.quantidade}}</a>
-            {% endif %}
-          </td>
-          <td><a href="{% url 'estoque:nivel_reabastecimento' estoque.id %}">
-            {{estoque.nivel_reabastecimento}}</a></td>
-          <td>{{estoque.ultima_atualizacao}}</td>
-          <td>{{estoque.criado}}</td>
-          <td><a href="{% url 'estoque:delete_item' estoque.id %}">
-            <img src="{% static 'img/delete.jpg' %}" alt=""width="20" height="20"></a></td>
+          <td>{{instance.id}}</td>
+          <td>{{instance.categoria}}</td>
+          <td>{{instance.item_nome}}</td>
+          <td>{{instance.quantidade}}</td>
+          <td>{{instance.quantidade_emitida}}</td>
+          <td>{{instance.quantidade_recebida}}</td>
+          <td>{{instance.recebida_por}}</td>
+          <td>{{instance.emitida_por}}</td>
+          <td>{{instance.ultima_atualizacao}}</td>
         </tr>
-      {% endfor %}
-    </table>
-  </div>
- 
+    {% endfor %}
+  </table>
+</div>
+    
 </main>
 
 
