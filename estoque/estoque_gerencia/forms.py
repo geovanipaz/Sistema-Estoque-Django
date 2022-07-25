@@ -2,7 +2,7 @@ from dataclasses import field, fields
 from pyexpat import model
 from django import forms
 
-from .models import Estoque
+from .models import Estoque, HistoricoEstoque
 
 class EstoqueCreateForm(forms.ModelForm):
     class Meta:
@@ -51,3 +51,12 @@ class NivelReabastecimentoForm(forms.ModelForm):
     class Meta:
         model = Estoque
         fields = ['nivel_reabastecimento']
+        
+class HistoricoEstoqueSearchForm(forms.ModelForm):
+    exportar_para_CSV = forms.BooleanField(required=False)
+    data_inicio = forms.DateTimeField(required=False)
+    data_fim = forms.DateTimeField(required=False)
+    class Meta:
+        model = HistoricoEstoque
+        fields = ['categoria', 'item_nome', 'data_inicio', 'data_fim']
+        

@@ -50,6 +50,10 @@ th {
     font-weight: bolder;
 }
 
+.mybutton{
+	width: 100%;
+  }
+
 .success{
 	list-style: none;
 	background-color: #2e6da4;

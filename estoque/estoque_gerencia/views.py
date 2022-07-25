@@ -1,4 +1,5 @@
 from multiprocessing import context
+from multiprocessing.sharedctypes import Value
 
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
@@ -7,7 +8,7 @@ import csv
 from django.contrib.auth.decorators import login_required
 from .models import Estoque, HistoricoEstoque
 from .forms import EstoqueCreateForm, EstoqueSearchForm, EstoqueUpdateForm
-from .forms import EmitirForm, ReceberForm, NivelReabastecimentoForm
+from .forms import EmitirForm, ReceberForm, NivelReabastecimentoForm, HistoricoEstoqueSearchForm
 from django.contrib import messages
 # Create your views here.
 
@@ -15,7 +16,8 @@ from django.contrib import messages
 def home(request):
     title = "bem vindo"
     context = {'title':title}
-    return render(request, 'home.html', context)
+    return redirect('/list_item')
+    #return render(request, 'home.html', context)
 
 @login_required
 def list_item(request):
@@ -180,7 +182,7 @@ def nivel_reabastecimento(request, pk):
 def list_history(request):
     cabeca = 'LISTA DE ITENS'
     historico = HistoricoEstoque.objects.all()
-    form  = EstoqueSearchForm(request.POST or None)
+    form  = HistoricoEstoqueSearchForm(request.POST or None)
     context = {
         'form':form,
         'cabeca':cabeca,
@@ -189,8 +191,17 @@ def list_history(request):
     
     if request.method == 'POST':
         categoria = form['categoria'].value()
+        '''
         historico = HistoricoEstoque.objects.filter(
             item_nome__icontains=form['item_nome'].value()
+        )
+        '''
+        historico = HistoricoEstoque.objects.filter(
+            item_nome__icontains=form['item_nome'].value(),
+            ultima_atualizacao__range=[
+                form['data_inicio'].value(),
+                form['data_fim'].value()
+            ]
         )
         
         if (categoria != ''):
