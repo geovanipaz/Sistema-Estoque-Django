@@ -51,7 +51,7 @@ def list_item(request):
             'title':title,
             'estoques':estoques
         }
-    return render(request, 'list_item.html', context)
+    return render(request, 'estoque_gerencia/list_item1.html', context)
 
 @login_required
 def add_item(request):
@@ -238,4 +238,4 @@ def list_history(request):
             'cabeca':cabeca,
             'historico': historico
         }
-    return render(request, "list_history.html",context)
+    return render(request, "estoque_gerencia/list_history1.html",context)

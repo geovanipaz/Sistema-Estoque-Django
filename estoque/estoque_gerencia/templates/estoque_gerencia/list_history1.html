@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+  
+<main role='main' class="container">
+    {% if messages %}
+      <ul class="messages">
+           {% for message in messages %}
+                 <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+           {% endfor %}
+      </ul>
+    {% endif %}
+    <div class="header">{{cabeca}}</div>
+    <div class="row">
+      <div class="col-sm-2">
+        <form method='POST' action=''>
+          {% csrf_token %}
+          {{form|crispy}}
+          <input type="submit" value='Search'/>
+        </form>
+      </div>  
+      <div class="col-sm-10">
+        <div class="display_table">
+          <table class='table'>
+            <thead>
+              <tr>
+                <th>COUNT</th>
+                <th>ID</th>
+                <th>CATEGORIA</th>
+                <th>ITEM NOME</th>
+                <th>QUANTIDADE NO ESTOQUE</th>
+                <th>QUANTIDADE EMITIDA</th>
+                <th>QUANTIDADE RECEBIDA</th>
+                <th>RECEBIDA POR</th>
+                <th>EMITIDA POR</th>
+                <th>ULTIMA ATUALIZAÇÃO</th>
+              </tr>
+            </thead>
+          {% for instance in historico %}
+              <tr>
+  
+                <td>{{forloop.counter}}</td>
+                <td>{{instance.id}}</td>
+                <td>{{instance.categoria}}</td>
+                <td>{{instance.item_nome}}</td>
+                <td>{{instance.quantidade}}</td>
+                <td>{{instance.quantidade_emitida}}</td>
+                <td>{{instance.quantidade_recebida}}</td>
+                <td>{{instance.recebida_por}}</td>
+                <td>{{instance.emitida_por}}</td>
+                <td>{{instance.ultima_atualizacao}}</td>
+              </tr>
+          {% endfor %}
+        </table>
+      </div><!--fim da coluna-->
+      </div><!--fim da linha-->
+  </div>
+      
+  </main>
+
+
+
+{% endblock content %}
+
+      
